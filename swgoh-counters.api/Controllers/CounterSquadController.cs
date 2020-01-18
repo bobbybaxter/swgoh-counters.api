@@ -4,43 +4,50 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using swgoh_counters.api.Models;
+using swgoh_counters.api.Repositories;
 
 namespace swgoh_counters.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/counterSquad")]
     [ApiController]
     public class CounterSquadController : ControllerBase
     {
-        // GET: api/CounterSquad
+        private readonly CounterSquadRepository _repo = new CounterSquadRepository();
+
+        // GET: api/counterSquad
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<CounterSquad> GetAllCounterSquads()
         {
-            return new string[] { "value1", "value2" };
+            return _repo.GetAll();
         }
 
-        // GET: api/CounterSquad/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        // GET: api/counterSquad/BOSSK
+        [HttpGet("{counterSquadId}")]
+        public CounterSquad GetCounterSquad(string counterSquadId)
         {
-            return "value";
+            return _repo.Get(counterSquadId);
         }
 
-        // POST: api/CounterSquad
+        // POST: api/counterSquad
         [HttpPost]
-        public void Post([FromBody] string value)
+        public bool PostCounterSquad(CounterSquad counterSquad)
         {
+            return _repo.Create(counterSquad);
         }
 
-        // PUT: api/CounterSquad/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT: api/counterSquad/BOSSK
+        [HttpPut("{counterSquadId}")]
+        public bool PutCounterSquad(CounterSquad counterSquad, string counterSquadId)
         {
+            return _repo.Update(counterSquad, counterSquadId);
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE: api/counterSquad/BOSSK
+        [HttpDelete("{counterSquadId}")]
+        public bool DeleteCounterSquad(string counterSquadId)
         {
+            return _repo.Delete(counterSquadId);
         }
     }
 }

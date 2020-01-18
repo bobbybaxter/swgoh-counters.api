@@ -24,7 +24,7 @@ namespace swgoh_counters.api.Repositories
             }
         }
 
-        public CounterSquad GetCounterSquad(string Id)
+        public CounterSquad Get(string Id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -43,7 +43,7 @@ namespace swgoh_counters.api.Repositories
             }
         }
 
-        public bool AddCounterSquad(CounterSquad newCounterSquad)
+        public bool Create(CounterSquad newCounterSquad)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -110,14 +110,14 @@ namespace swgoh_counters.api.Repositories
 
         }
 
-        public bool UpdateCounterSquad(CounterSquad counterSquadToUpdate, string id)
+        public bool Update(CounterSquad counterSquadToUpdate, string id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
                 var sql = @"UPDATE [dbo].[CounterSquad]
-                               SET [Id] = @id
+                               SET [Id] = @newId
                                   ,[Name] = @name
                                   ,[Type] = @type
                                   ,[LeaderName] = @leaderName
@@ -133,15 +133,34 @@ namespace swgoh_counters.api.Repositories
                                   ,[IsToon3Required] = @isToon3Required
                                   ,[IsToon4Required] = @isToon4Required
                                   ,[IsToon5Required] = @isToon5Required
-                             WHERE [Id] = @id>";
+                             WHERE [Id] = @id";
 
-                counterSquadToUpdate.Id = id;
+                var parameters = new
+                {
+                    id,
+                    newId = counterSquadToUpdate.Id,
+                    name = counterSquadToUpdate.Name,
+                    type = counterSquadToUpdate.Type,
+                    leaderName = counterSquadToUpdate.LeaderName,
+                    toon2Name = counterSquadToUpdate.Toon2Name,
+                    toon3Name = counterSquadToUpdate.Toon3Name,
+                    toon4Name = counterSquadToUpdate.Toon4Name,
+                    toon5Name = counterSquadToUpdate.Toon5Name,
+                    subs = counterSquadToUpdate.Subs,
+                    description = counterSquadToUpdate.Description,
+                    counterStrategy = counterSquadToUpdate.CounterStrategy,
+                    isLeaderRequired = counterSquadToUpdate.IsLeaderRequired,
+                    isToon2Required = counterSquadToUpdate.IsToon2Required,
+                    isToon3Required = counterSquadToUpdate.IsToon3Required,
+                    isToon4Required = counterSquadToUpdate.IsToon4Required,
+                    isToon5Required = counterSquadToUpdate.IsToon5Required
+                };
 
-                return connection.Execute(sql, counterSquadToUpdate) == 1;
+                return connection.Execute(sql, parameters) == 1;
             }
         }
 
-        public bool DeleteCounterSquad(CounterSquad counterSquadToDelete, string id)
+        public bool Delete(string id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -150,9 +169,9 @@ namespace swgoh_counters.api.Repositories
                 var sql = @"DELETE FROM [dbo].[CounterSquad]
                             WHERE [Id] = @id";
 
-                counterSquadToDelete.Id = id;
+                var parameters = new { id };
 
-                return connection.Execute(sql, counterSquadToDelete) == 1;
+                return connection.Execute(sql, parameters) == 1;
             }
         }
     }
