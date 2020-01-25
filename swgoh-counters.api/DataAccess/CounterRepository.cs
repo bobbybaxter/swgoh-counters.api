@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using swgoh_counters.api.Commands;
 using swgoh_counters.api.Models;
 using System;
@@ -11,7 +12,12 @@ namespace swgoh_counters.api.DataAccess
 {
     public class CounterRepository
     {
-        string _connectionString = "Server=localhost;Database=SWGOHCounters;Trusted_Connection=True;";
+        private string _connectionString;
+
+        public CounterRepository(IConfiguration config)
+        {
+            _connectionString = config.GetConnectionString("SWGOHCountersConnection");
+        }
 
         public List<Counter> GetAll()
         {
