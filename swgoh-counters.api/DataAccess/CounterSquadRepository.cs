@@ -5,12 +5,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
-namespace swgoh_counters.api.Repositories
+namespace swgoh_counters.api.DataAccess
 {
     public class CounterSquadRepository
     {
-        string _connectionString = "Server=localhost;Database=SWGOHCounters;Trusted_Connection=True;";
+        private string _connectionString;
+
+        public CounterSquadRepository(IConfiguration config)
+        {
+            _connectionString = config.GetConnectionString("SWGOHCountersConnection");
+        }
 
         public List<CounterSquad> GetAll()
         {
