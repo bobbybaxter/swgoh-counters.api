@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using swgoh_counters.api.DataAccess;
 
 namespace swgoh_counters.api
 {
@@ -25,7 +26,7 @@ namespace swgoh_counters.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var authSettings = Configuration.GetSection("AuthenticationSettings");
+            //var authSettings = Configuration.GetSection("AuthenticationSettings");
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -37,6 +38,8 @@ namespace swgoh_counters.api
             }));
 
             services.AddSingleton(Configuration);
+            services.AddTransient<CounterSquadRepository>();
+            services.AddTransient<CounterRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
