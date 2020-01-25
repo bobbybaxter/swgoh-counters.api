@@ -14,7 +14,12 @@ namespace swgoh_counters.api.Controllers
     [ApiController]
     public class CounterController : ControllerBase
     {
-        private readonly CounterRepository _repo = new CounterRepository();
+        readonly CounterRepository _repo;
+
+        public CounterController(CounterRepository repo)
+        {
+            _repo = repo;
+        }
 
         // GET: api/counter
         [HttpGet]

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using swgoh_counters.api.Models;
-using swgoh_counters.api.Repositories;
+using swgoh_counters.api.DataAccess;
 
 namespace swgoh_counters.api.Controllers
 {
@@ -13,7 +13,12 @@ namespace swgoh_counters.api.Controllers
     [ApiController]
     public class CounterSquadController : ControllerBase
     {
-        private readonly CounterSquadRepository _repo = new CounterSquadRepository();
+        readonly CounterSquadRepository _repo;
+
+        public CounterSquadController(CounterSquadRepository repo)
+        {
+            _repo = repo;
+        }
 
         // GET: api/counterSquad
         [HttpGet]
