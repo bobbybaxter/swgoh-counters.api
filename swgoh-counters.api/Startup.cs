@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,7 +27,7 @@ namespace swgoh_counters.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //var authSettings = Configuration.GetSection("AuthenticationSettings");
+            var authSettings = Configuration.GetSection("AuthenticationSettings");
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -36,6 +37,22 @@ namespace swgoh_counters.api
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                    {
+                        options.IncludeErrorDetails = true;
+                        options.Authority = authSettings["Authority"];
+                        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidIssuer = authSettings["Issuer"],
+                            ValidateAudience = true,
+                            ValidAudience = authSettings["Audience"],
+                            ValidateLifetime = true
+                        };
+                    }
+                );
 
             services.AddSingleton(Configuration);
             services.AddTransient<CounterSquadRepository>();
@@ -56,6 +73,8 @@ namespace swgoh_counters.api
             }
 
             app.UseCors("SWGOHCountersPolicy");
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
             app.UseMvc();

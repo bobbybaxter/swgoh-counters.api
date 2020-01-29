@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+**/aws-beanstalk-tools-defaults.json
 **/appsettings.json
 **/database.json
 **/obj
