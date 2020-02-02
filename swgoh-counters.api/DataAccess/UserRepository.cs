@@ -31,7 +31,7 @@ namespace swgoh_counters.api.DataAccess
             }
         }
 
-        public User Get(string AllyCode)
+        public User GetUserByAllyCode(string AllyCode)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -42,6 +42,25 @@ namespace swgoh_counters.api.DataAccess
                 var parameters = new
                 {
                     AllyCode
+                };
+
+                var user = connection.QueryFirst<User>(sql, parameters);
+
+                return user;
+            }
+        }
+
+        public User GetUserById(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var sql = @"SELECT * FROM [User] WHERE User.Id = @id";
+
+                var parameters = new
+                {
+                    Id = id
                 };
 
                 var user = connection.QueryFirst<User>(sql, parameters);
