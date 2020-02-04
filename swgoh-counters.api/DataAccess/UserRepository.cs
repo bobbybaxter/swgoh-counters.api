@@ -31,20 +31,39 @@ namespace swgoh_counters.api.DataAccess
             }
         }
 
-        public User GetUserByAllyCode(string AllyCode)
+        public User GetUserByAllyCode(string allyCode)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                var sql = @"SELECT * FROM [User] WHERE User.AllyCode = @AllyCode";
+                var sql = @"SELECT * FROM [User] WHERE [User].AllyCode = @allyCode";
 
                 var parameters = new
                 {
-                    AllyCode
+                    allyCode
                 };
 
                 var user = connection.QueryFirst<User>(sql, parameters);
+
+                return user;
+            }
+        }
+
+        public User GetUserByFirebaseUid(string firebaseUid)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var sql = @"SELECT * FROM [User] WHERE [User].FirebaseUid = @firebaseUid";
+
+                var parameters = new
+                {
+                    firebaseUid
+                };
+
+                var user = connection.QueryFirstOrDefault<User>(sql, parameters);
 
                 return user;
             }
@@ -56,7 +75,7 @@ namespace swgoh_counters.api.DataAccess
             {
                 connection.Open();
 
-                var sql = @"SELECT * FROM [User] WHERE User.Id = @id";
+                var sql = @"SELECT * FROM [User] WHERE [User].Id = @id";
 
                 var parameters = new
                 {
@@ -75,16 +94,16 @@ namespace swgoh_counters.api.DataAccess
             {
                 connection.Open();
 
-                var sql = @"INSERT INTO [dbo].[Counter]
-                                                   ([AllyCode]
-                                                   ,[Email]
-                                                   ,[FirebaseUid]
-                                                   ,[Username])
-                                             VALUES
-                                                   (@allyCode
-                                                   ,@email
-                                                   ,@firebaseUid
-                                                   ,@username)";
+                var sql = @"INSERT INTO [dbo].[User]
+                                             ([AllyCode]
+                                             ,[Email]
+                                             ,[FirebaseUid]
+                                             ,[Username])
+                                         VALUES
+                                             (@allyCode
+                                             ,@email
+                                             ,@firebaseUid
+                                             ,@username)";
 
                 var rowsAffected = connection.Execute(sql, newUser);
 

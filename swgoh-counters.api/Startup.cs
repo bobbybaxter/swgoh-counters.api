@@ -57,6 +57,7 @@ namespace swgoh_counters.api
             services.AddSingleton(Configuration);
             services.AddTransient<CounterSquadRepository>();
             services.AddTransient<CounterRepository>();
+            services.AddTransient<UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

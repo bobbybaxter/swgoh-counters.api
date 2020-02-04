@@ -12,7 +12,8 @@ using swgoh_counters.api.Models;
 namespace swgoh_counters.api.DataAccess
 {
     [Route("api/user")]
-    [ApiController, Authorize]
+    //[ApiController,Authorize]
+    [ApiController]
     public class UserController : FirebaseEnabledController
     {
         readonly UserRepository _repo;
@@ -30,15 +31,22 @@ namespace swgoh_counters.api.DataAccess
         }
 
         // GET: api/user/123456789
-        [HttpGet("{allyCode}")]
-        public User GetUser(string allyCode)
+        [HttpGet("allyCode/{allyCode}")]
+        public User GetUserByAllyCode(string allyCode)
         {
             return _repo.GetUserByAllyCode(allyCode);
         }
 
+        // GET: api/user/123456789ABCDEFG
+        [HttpGet("firebase/{firebaseUid}")]
+        public User GetUserByFirebaseUid(string firebaseUid)
+        {
+            return _repo.GetUserByFirebaseUid(firebaseUid);
+        }
+
         // GET: api/user/1
         [HttpGet("{userId}")]
-        public User GetUser(int userId)
+        public User GetUserById(int userId)
         {
             return _repo.GetUserById(userId);
         }
