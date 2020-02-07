@@ -65,7 +65,7 @@ namespace swgoh_counters.api.DataAccess
 
         // PUT: api/user/5
         [HttpPut("{userId}")]
-        public User PutUser(User user, int userId)
+        public bool PutUser(User user, int userId)
         {
             return _repo.Update(user, userId);
         }

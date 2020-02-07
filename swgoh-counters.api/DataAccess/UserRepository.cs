@@ -111,7 +111,7 @@ namespace swgoh_counters.api.DataAccess
             }
         }
 
-        public User Update(User userToUpdate, int id)
+        public bool Update(User userToUpdate, int id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -119,10 +119,17 @@ namespace swgoh_counters.api.DataAccess
 
                 var sql = @"UPDATE [dbo].[User]
                                SET [AllyCode] = @allyCode
+                                  ,[Username] = @username
                              WHERE [Id] = @id";
-                userToUpdate.Id = id;
-                var updatedUser = connection.QueryFirst<User>(sql, userToUpdate);
-                return updatedUser;
+
+                var parameters = new
+                {
+                    id,
+                    allyCode = userToUpdate.AllyCode,
+                    username = userToUpdate.Username
+                };
+
+                return connection.Execute(sql, parameters) == 1;
             }
         }
 
