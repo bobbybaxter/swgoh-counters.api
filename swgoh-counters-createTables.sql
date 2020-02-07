@@ -29,6 +29,15 @@ CREATE TABLE [Counter] (
 )
 GO
 
+CREATE TABLE [User] (
+  [Id] INT PRIMARY KEY IDENTITY(1, 1),
+  [AllyCode] NVARCHAR(9),
+  [Email] NVARCHAR(255),
+  [FirebaseUid] NVARCHAR(255),
+  [Username] NVARCHAR(50)
+)
+GO
+
 ALTER TABLE [Counter] ADD FOREIGN KEY ([OpponentTeamId]) REFERENCES [CounterSquad] ([Id])
 GO
 
