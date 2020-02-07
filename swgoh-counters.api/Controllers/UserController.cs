@@ -30,14 +30,14 @@ namespace swgoh_counters.api.DataAccess
             return _repo.GetAll();
         }
 
-        // GET: api/user/123456789
+        // GET: api/user/allyCode/123456789
         [HttpGet("allyCode/{allyCode}")]
         public User GetUserByAllyCode(string allyCode)
         {
             return _repo.GetUserByAllyCode(allyCode);
         }
 
-        // GET: api/user/123456789ABCDEFG
+        // GET: api/user/firebase/123456789ABCDEFG
         [HttpGet("firebase/{firebaseUid}")]
         public User GetUserByFirebaseUid(string firebaseUid)
         {
@@ -65,7 +65,7 @@ namespace swgoh_counters.api.DataAccess
 
         // PUT: api/user/5
         [HttpPut("{userId}")]
-        public bool PutUser(User user, int userId)
+        public User PutUser(User user, int userId)
         {
             return _repo.Update(user, userId);
         }
