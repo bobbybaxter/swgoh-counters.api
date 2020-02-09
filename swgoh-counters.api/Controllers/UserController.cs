@@ -53,19 +53,20 @@ namespace swgoh_counters.api.DataAccess
 
         // POST: api/user
         [HttpPost]
-        public bool PostUser()
+        public User PostUser()
         {
             AddUserCommand newUser = new AddUserCommand()
             {
                 FirebaseUid = FirebaseId,
                 Email = FirebaseEmail
             };
+
             return _repo.Create(newUser);
         }
 
         // PUT: api/user/5
         [HttpPut("{userId}")]
-        public bool PutUser(User user, int userId)
+        public bool PutUser(UpdateUserCommand user, int userId)
         {
             return _repo.Update(user, userId);
         }
