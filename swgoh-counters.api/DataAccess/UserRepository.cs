@@ -12,7 +12,7 @@ namespace swgoh_counters.api.DataAccess
 {
     public class UserRepository
     {
-        private string _connectionString;
+        private readonly string _connectionString;
 
         public UserRepository(IConfiguration config)
         {
@@ -44,7 +44,7 @@ namespace swgoh_counters.api.DataAccess
                     allyCode
                 };
 
-                var user = connection.QueryFirst<User>(sql, parameters);
+                var user = connection.QueryFirstOrDefault<User>(sql, parameters);
 
                 return user;
             }
@@ -69,7 +69,7 @@ namespace swgoh_counters.api.DataAccess
             }
         }
 
-        public User GetUserById(int id)
+        public User GetUserById(int Id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -79,39 +79,34 @@ namespace swgoh_counters.api.DataAccess
 
                 var parameters = new
                 {
-                    Id = id
+                    id = Id
                 };
 
-                var user = connection.QueryFirst<User>(sql, parameters);
+                var user = connection.QueryFirstOrDefault<User>(sql, parameters);
 
                 return user;
             }
         }
 
-        public bool Create(AddUserCommand newUser)
+        public User Create(AddUserCommand newUser)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
                 var sql = @"INSERT INTO [dbo].[User]
-                                             ([AllyCode]
-                                             ,[Email]
-                                             ,[FirebaseUid]
-                                             ,[Username])
+                                             ([Email]
+                                             ,[FirebaseUid])
+                                         OUTPUT INSERTED.*
                                          VALUES
-                                             (@allyCode
-                                             ,@email
-                                             ,@firebaseUid
-                                             ,@username)";
+                                             (@email
+                                             ,@firebaseUid)";
 
-                var rowsAffected = connection.Execute(sql, newUser);
-
-                return rowsAffected == 1;
+                return connection.QueryFirst<User>(sql, newUser);
             }
         }
 
-        public bool Update(User userToUpdate, int id)
+        public bool Update(UpdateUserCommand userToUpdate, int id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -122,14 +117,9 @@ namespace swgoh_counters.api.DataAccess
                                   ,[Username] = @username
                              WHERE [Id] = @id";
 
-                var parameters = new
-                {
-                    id,
-                    allyCode = userToUpdate.AllyCode,
-                    username = userToUpdate.Username
-                };
+                userToUpdate.Id = id;
 
-                return connection.Execute(sql, parameters) == 1;
+                return connection.Execute(sql, userToUpdate) == 1;
             }
         }
 
